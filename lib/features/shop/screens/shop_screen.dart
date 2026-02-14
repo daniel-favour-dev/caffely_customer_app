@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'search_shop_screen.dart';
 
 class ShopScreen extends StatefulWidget {
   const ShopScreen({super.key});
@@ -73,7 +74,14 @@ class _ShopScreenState extends State<ShopScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.search, color: Colors.black, size: 28),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const SearchShopScreen(),
+                ),
+              );
+            },
           ),
           const SizedBox(width: 8),
         ],
