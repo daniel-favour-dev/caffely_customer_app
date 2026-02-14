@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="ring"
+            android:innerRadiusRatio="3"
+            android:thicknessRatio="8"
+            android:useLevel="false">
+            <size android:width="48dp" android:height="48dp" />
+            <gradient
+                android:type="sweep"
+                android:useLevel="false"
+                android:startColor="#00BFA5"
+                android:endColor="#00BFA5"
+                 />
+            <!-- Using a solid color for now as 'static circular loader', 
+                 a gradient is usually for progress. 
+                 If it's static, a simple ring is fine. 
+                 The image shows a partial ring or a full ring? 
+                 User said "Static circular loader". 
+                 I'll make it a full ring with the brand green color. -->
+            <solid android:color="#00000000" />
+            <stroke android:width="4dp" android:color="#00BFA5" />
+        </shape>
+    </item>
+</layer-list>

@@ -27,7 +27,6 @@ class LocationService {
   }
 
   /// Stream location updates.
-  /// This is useful for the driver app to track location in the background.
   Stream<Position> get locationStream {
     return Geolocator.getPositionStream(
       locationSettings: const LocationSettings(
