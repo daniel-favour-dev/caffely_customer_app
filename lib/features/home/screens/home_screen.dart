@@ -3,6 +3,8 @@ import '../../notification/screens/notification_screen.dart';
 import 'popular_menu_screen.dart';
 import 'special_offer_screen.dart';
 import 'nearby_shops_screen.dart';
+import '../../shop/screens/shop_detail_screen.dart';
+import '../../shop/screens/coffee_detail_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -264,7 +266,7 @@ class HomeScreen extends StatelessWidget {
                     separatorBuilder: (context, index) =>
                         const SizedBox(width: 16),
                     itemBuilder: (context, index) {
-                      return _buildShopCard(index);
+                      return _buildShopCard(context, index);
                     },
                   ),
                 ),
@@ -291,7 +293,7 @@ class HomeScreen extends StatelessWidget {
                   ),
                   itemCount: 4,
                   itemBuilder: (context, index) {
-                    return _buildMenuCard(index);
+                    return _buildMenuCard(context, index);
                   },
                 ),
               ],
@@ -335,111 +337,122 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildShopCard(int index) {
-    return Container(
-      width: 200,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.shade100,
-            blurRadius: 10,
-            offset: const Offset(0, 4),
+  Widget _buildShopCard(BuildContext context, int index) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                const ShopDetailScreen(shopName: "Caffely Astoria Aromas"),
           ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Image
-          Expanded(
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.grey.shade200,
-                borderRadius: const BorderRadius.vertical(
-                  top: Radius.circular(16),
-                ),
-              ),
-              child: Stack(
-                children: [
-                  const Center(
-                    child: Icon(Icons.store, size: 40, color: Colors.grey),
-                  ),
-                  Positioned(
-                    top: 10,
-                    left: 10,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 4,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.6),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: const Row(
-                        children: [
-                          Icon(Icons.star, color: Colors.amber, size: 12),
-                          SizedBox(width: 4),
-                          Text(
-                            "4.8",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 10,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+        );
+      },
+      child: Container(
+        width: 200,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.shade100,
+              blurRadius: 10,
+              offset: const Offset(0, 4),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  "Caffely Astoria Aromas",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                    color: Colors.black,
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Image
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade200,
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(16),
                   ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
                 ),
-                const SizedBox(height: 6),
-                Row(
+                child: Stack(
                   children: [
-                    Icon(
-                      Icons.location_on,
-                      size: 14,
-                      color: const Color(0xFF00B14F),
+                    const Center(
+                      child: Icon(Icons.store, size: 40, color: Colors.grey),
                     ),
-                    const SizedBox(width: 4),
-                    Text(
-                      "1.2 km",
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey.shade600,
+                    Positioned(
+                      top: 10,
+                      left: 10,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.black.withOpacity(0.6),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: const Row(
+                          children: [
+                            Icon(Icons.star, color: Colors.amber, size: 12),
+                            SizedBox(width: 4),
+                            Text(
+                              "4.8",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 10,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ],
                 ),
-              ],
+              ),
             ),
-          ),
-        ],
+            Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "Caffely Astoria Aromas",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                      color: Colors.black,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 6),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.location_on,
+                        size: 14,
+                        color: const Color(0xFF00B14F),
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        "1.2 km",
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey.shade600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildMenuCard(int index) {
+  Widget _buildMenuCard(BuildContext context, int index) {
     final List<Map<String, String>> menuItems = [
       {'name': 'Classic Brew', 'price': '3.50'},
       {'name': 'Minty Fresh Brew', 'price': '4.50'},
@@ -448,60 +461,74 @@ class HomeScreen extends StatelessWidget {
     ];
     final item = menuItems[index % menuItems.length];
 
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.shade100,
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.grey.shade50, // Slightly off-white bg for product
-                borderRadius: const BorderRadius.all(Radius.circular(16)),
-              ),
-              child: const Center(
-                child: Icon(Icons.coffee, size: 60, color: Colors.brown),
-              ),
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => CoffeeDetailScreen(
+              productName: item['name']!,
+              price: item['price']!,
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  item['name']!,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                    color: Colors.black,
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                const SizedBox(height: 6),
-                Text(
-                  "\$${item['price']}",
-                  style: const TextStyle(
-                    fontSize: 14,
-                    color: Color(0xFF00B14F),
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
+        );
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.shade100,
+              blurRadius: 10,
+              offset: const Offset(0, 4),
             ),
-          ),
-        ],
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                  color:
+                      Colors.grey.shade50, // Slightly off-white bg for product
+                  borderRadius: const BorderRadius.all(Radius.circular(16)),
+                ),
+                child: const Center(
+                  child: Icon(Icons.coffee, size: 60, color: Colors.brown),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    item['name']!,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                      color: Colors.black,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    "\$${item['price']}",
+                    style: const TextStyle(
+                      fontSize: 14,
+                      color: Color(0xFF00B14F),
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

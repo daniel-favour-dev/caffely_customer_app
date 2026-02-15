@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'shop_detail_screen.dart';
 
 class SearchShopScreen extends StatefulWidget {
   const SearchShopScreen({super.key});
@@ -200,91 +201,101 @@ class _SearchShopScreenState extends State<SearchShopScreen> {
       separatorBuilder: (context, index) => const Divider(height: 32),
       itemBuilder: (context, index) {
         final shop = _searchResults[index];
-        return Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              width: 80,
-              height: 80,
-              decoration: BoxDecoration(
-                color: Colors.grey.shade100,
-                borderRadius: BorderRadius.circular(12),
+        return GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ShopDetailScreen(shopName: shop['name']),
               ),
-              child: const Center(
-                child: Icon(Icons.store, color: Colors.grey, size: 32),
+            );
+          },
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                width: 80,
+                height: 80,
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade100,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: const Center(
+                  child: Icon(Icons.store, color: Colors.grey, size: 32),
+                ),
               ),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    shop['name'],
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 17,
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      shop['name'],
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 17,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 4),
-                  Row(
-                    children: [
-                      const Icon(
-                        Icons.location_on,
-                        color: primaryGreen,
-                        size: 14,
-                      ),
-                      const SizedBox(width: 4),
-                      Expanded(
-                        child: Text(
-                          "${shop['distance']} | ${shop['location']}",
-                          style: TextStyle(
-                            color: Colors.grey.shade600,
-                            fontSize: 13,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  Row(
-                    children: [
-                      ...List.generate(5, (i) {
-                        return Icon(
-                          Icons.star,
+                    const SizedBox(height: 4),
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.location_on,
+                          color: primaryGreen,
                           size: 14,
-                          color: i < (shop['rating'] as double).floor()
-                              ? Colors.amber
-                              : Colors.grey.shade300,
-                        );
-                      }),
-                      const SizedBox(width: 4),
-                      Text(
-                        "${shop['rating']} (${shop['reviews']} reviews)",
-                        style: TextStyle(
-                          color: Colors.grey.shade500,
-                          fontSize: 12,
                         ),
-                      ),
-                    ],
-                  ),
-                ],
+                        const SizedBox(width: 4),
+                        Expanded(
+                          child: Text(
+                            "${shop['distance']} | ${shop['location']}",
+                            style: TextStyle(
+                              color: Colors.grey.shade600,
+                              fontSize: 13,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        ...List.generate(5, (i) {
+                          return Icon(
+                            Icons.star,
+                            size: 14,
+                            color: i < (shop['rating'] as double).floor()
+                                ? Colors.amber
+                                : Colors.grey.shade300,
+                          );
+                        }),
+                        const SizedBox(width: 4),
+                        Text(
+                          "${shop['rating']} (${shop['reviews']} reviews)",
+                          style: TextStyle(
+                            color: Colors.grey.shade500,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(width: 8),
-            const Padding(
-              padding: EdgeInsets.only(top: 8.0),
-              child: Icon(
-                Icons.arrow_forward_ios,
-                size: 14,
-                color: Colors.grey,
+              const SizedBox(width: 8),
+              const Padding(
+                padding: EdgeInsets.only(top: 8.0),
+                child: Icon(
+                  Icons.arrow_forward_ios,
+                  size: 14,
+                  color: Colors.grey,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         );
       },
     );
