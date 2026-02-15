@@ -1,4 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import '../widgets/custom_time_picker.dart';
 import 'delivery_tracking_screen.dart';
 
 class CheckoutScreen extends StatefulWidget {
@@ -12,6 +15,30 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   bool isDelivery = true; // Toggle state: Pick up vs Delivery
   bool usePoints = true; // Points toggle state
   final Color primaryGreen = const Color(0xFF00B14F);
+
+  // Pick Up State
+  String _pickUpOption = "Pick up now";
+  DateTime _selectedDate = DateTime.now();
+  TimeOfDay _selectedTime = TimeOfDay.now();
+
+  String get _formattedPickUpTime {
+    if (_pickUpOption == "Pick up now") {
+      return "Pick up at ${DateFormat('h:mm a').format(DateTime.now().add(const Duration(minutes: 15)))}";
+    }
+    final now = DateTime.now();
+    final dt = DateTime(
+      now.year,
+      now.month,
+      now.day,
+      _selectedTime.hour,
+      _selectedTime.minute,
+    );
+    return "Pick up at ${DateFormat('h:mm a').format(dt)}";
+  }
+
+  String get _formattedPickUpDate {
+    return "Today, ${DateFormat('MMM dd yyyy').format(DateTime.now())}";
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -99,68 +126,308 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
             // 2. Address Sections
             if (isDelivery) ...[
-              _buildSectionTitle("Your order is delivered from:"),
-              const SizedBox(height: 12),
-              _buildLocationCard(
-                icon: Icons.storefront_outlined,
-                title: "Caffely Astoria Aromas",
-                subtitle: "350 5th Ave, New York, NY 10118, USA",
-                extraInfo: "1.2 km from your location",
-              ),
-              const SizedBox(height: 20),
-              _buildSectionTitle("To your address:"),
-              const SizedBox(height: 12),
-              _buildLocationCard(
-                icon: Icons.location_on_outlined,
-                title: "Home",
-                subtitle: "701 7th Ave, New York, NY 10036, USA",
-                extraInfo: "5 minutes estimate arrived",
-                showEdit: true,
-              ),
-            ] else ...[
-              _buildSectionTitle("Pick up store:"),
-              const SizedBox(height: 12),
-              _buildLocationCard(
-                icon: Icons.storefront_outlined,
-                title: "Caffely Astoria Aromas",
-                subtitle: "350 5th Ave, New York, NY 10118, USA",
-                extraInfo: "1.2 km from your location",
-              ),
-              const SizedBox(height: 20),
-              _buildSectionTitle("Pick up time:"),
-              const SizedBox(height: 12),
               Container(
+                width: double.infinity,
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey.shade200),
+                  color: Colors.white,
+                  border: Border.all(color: const Color(0xFFEEEEEE)),
                   borderRadius: BorderRadius.circular(16),
                 ),
-                child: Row(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Icon(Icons.access_time, color: Colors.grey.shade600),
-                    const SizedBox(width: 12),
-                    const Column(
+                    // From (Store)
+                    Text(
+                      "Your order is delivered from:",
+                      style: TextStyle(
+                        color: Colors.grey.shade600,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          "Pick up at 12:00 PM",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
+                        Container(
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(color: const Color(0xFFEEEEEE)),
+                          ),
+                          child: const Icon(
+                            Icons.storefront_outlined,
+                            size: 24,
+                            color: Colors.black,
                           ),
                         ),
-                        SizedBox(height: 4),
-                        Text(
-                          "Today, Dec 22 2023",
-                          style: TextStyle(color: Colors.grey, fontSize: 12),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                "Caffely Astoria Aromas",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                "350 5th Ave, New York, NY 10118, USA",
+                                style: TextStyle(
+                                  color: Colors.grey.shade600,
+                                  fontSize: 13,
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.location_on_outlined,
+                                    size: 16,
+                                    color: Colors.grey.shade500,
+                                  ),
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    "1.2 km from your location",
+                                    style: TextStyle(
+                                      color: Colors.grey.shade500,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),
-                    const Spacer(),
-                    const Icon(
-                      Icons.arrow_forward_ios,
-                      size: 16,
-                      color: Colors.grey,
+
+                    const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 16),
+                      child: Divider(height: 1, color: Color(0xFFEEEEEE)),
+                    ),
+
+                    // To (Address)
+                    Text(
+                      "To your address:",
+                      style: TextStyle(
+                        color: Colors.grey.shade600,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(color: const Color(0xFFEEEEEE)),
+                          ),
+                          child: const Icon(
+                            Icons.location_on_outlined,
+                            size: 24,
+                            color: Colors.black,
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                "Home",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                "701 7th Ave, New York, NY 10036, USA",
+                                style: TextStyle(
+                                  color: Colors.grey.shade600,
+                                  fontSize: 13,
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.access_time,
+                                    size: 16,
+                                    color: Colors.grey.shade500,
+                                  ),
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    "5 minutes estimate arrived",
+                                    style: TextStyle(
+                                      color: Colors.grey.shade500,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        const Icon(
+                          Icons.arrow_forward_ios,
+                          size: 16,
+                          color: Colors.grey,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ] else ...[
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border.all(color: const Color(0xFFEEEEEE)),
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Pick Up Time
+                    GestureDetector(
+                      onTap: _showPickUpTimeBottomSheet,
+                      behavior: HitTestBehavior.opaque,
+                      child: Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: const Color(0xFFEEEEEE),
+                              ),
+                            ),
+                            child: const Icon(
+                              Icons.access_time,
+                              size: 24,
+                              color: Colors.black,
+                            ),
+                          ),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  // Use formatted time as the main title to keep functionality
+                                  _pickUpOption == "Pick up now"
+                                      ? "Pick up now"
+                                      : "Pick up later",
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  _pickUpOption == "Pick up now"
+                                      ? "Take orders directly at the shop"
+                                      : _formattedPickUpTime,
+                                  style: TextStyle(
+                                    color: Colors.grey.shade600,
+                                    fontSize: 13,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const Icon(
+                            Icons.arrow_forward_ios,
+                            size: 16,
+                            color: Colors.grey,
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 16),
+                      child: Divider(height: 1, color: Color(0xFFEEEEEE)),
+                    ),
+
+                    // Pick Up Store
+                    Text(
+                      "Take your order at:",
+                      style: TextStyle(
+                        color: Colors.grey.shade600,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(color: const Color(0xFFEEEEEE)),
+                          ),
+                          child: const Icon(
+                            Icons.storefront_outlined,
+                            size: 24,
+                            color: Colors.black,
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                "Caffely Astoria Aromas",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                "350 5th Ave, New York, NY 10118, USA",
+                                style: TextStyle(
+                                  color: Colors.grey.shade600,
+                                  fontSize: 13,
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.location_on_outlined,
+                                    size: 16,
+                                    color: Colors.grey.shade500,
+                                  ),
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    "1.2 km from your location",
+                                    style: TextStyle(
+                                      color: Colors.grey.shade500,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -169,57 +436,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             const SizedBox(height: 24),
 
             // 3. Order Details
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                _buildSectionTitle("Order Details"),
-                OutlinedButton.icon(
-                  onPressed: () {},
-                  icon: Icon(Icons.add, size: 16, color: primaryGreen),
-                  label: Text(
-                    "Add more",
-                    style: TextStyle(
-                      color: primaryGreen,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  style: OutlinedButton.styleFrom(
-                    side: BorderSide(color: primaryGreen),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 4,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
             _buildOrderDetailsCard(),
-            const SizedBox(height: 12),
-            const Text(
-              "Notes",
-              style: TextStyle(
-                color: Colors.grey,
-                fontSize: 13,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey.shade200),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: const Text(
-                "Less sugar please.",
-                style: TextStyle(fontWeight: FontWeight.w500),
-              ),
-            ),
+            const SizedBox(height: 24),
             const SizedBox(height: 24),
 
             // 4. Delivery Method
@@ -268,54 +486,62 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             ],
 
             // 5. Order Discount
-            _buildSectionTitle("Order Discount"),
-            const SizedBox(height: 12),
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey.shade200),
+                border: Border.all(color: const Color(0xFFEEEEEE)),
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  const Text(
+                    "Order Discount",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  const Divider(height: 1, color: Color(0xFFEEEEEE)),
+                  const SizedBox(height: 16),
+
+                  // Use Vouchers
                   Row(
                     children: [
                       Container(
-                        padding: const EdgeInsets.all(8),
+                        padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          border: Border.all(color: Colors.grey.shade300),
+                          border: Border.all(color: const Color(0xFFEEEEEE)),
                         ),
                         child: const Icon(
-                          Icons.percent,
+                          Icons.confirmation_number_outlined,
                           size: 20,
                           color: Colors.black,
                         ),
                       ),
-                      const SizedBox(width: 12),
-                      // Voucher Chip
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 6,
-                        ),
-                        decoration: BoxDecoration(
-                          color: primaryGreen,
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Row(
-                          children: const [
-                            Text(
-                              "XGZ9V2",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
+                      const SizedBox(width: 16),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            "Use Vouchers",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
                             ),
-                            SizedBox(width: 4),
-                            Icon(Icons.close, color: Colors.white, size: 16),
-                          ],
-                        ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            "Save orders with promos",
+                            style: TextStyle(
+                              color: Colors.grey.shade600,
+                              fontSize: 13,
+                            ),
+                          ),
+                        ],
                       ),
                       const Spacer(),
                       const Icon(
@@ -325,25 +551,29 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       ),
                     ],
                   ),
+
                   const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 12),
-                    child: Divider(height: 1),
+                    padding: EdgeInsets.symmetric(vertical: 16),
+                    child: Divider(height: 1, color: Color(0xFFEEEEEE)),
                   ),
+
+                  // 200 Points
                   Row(
                     children: [
                       Container(
-                        padding: const EdgeInsets.all(8),
+                        padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          border: Border.all(color: Colors.grey.shade300),
+                          border: Border.all(color: const Color(0xFFEEEEEE)),
                         ),
                         child: const Icon(
-                          Icons.monetization_on_outlined,
+                          Icons
+                              .dns, // Assuming "database" icon for points/coins stack representation
                           size: 20,
                           color: Colors.black,
                         ),
                       ),
-                      const SizedBox(width: 12),
+                      const SizedBox(width: 16),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -354,11 +584,12 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                               fontSize: 16,
                             ),
                           ),
+                          const SizedBox(height: 4),
                           Text(
                             "100 points equals \$1.00",
                             style: TextStyle(
-                              color: Colors.grey.shade500,
-                              fontSize: 12,
+                              color: Colors.grey.shade600,
+                              fontSize: 13,
                             ),
                           ),
                         ],
@@ -368,6 +599,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         value: usePoints,
                         onChanged: (val) => setState(() => usePoints = val),
                         activeColor: primaryGreen,
+                        inactiveThumbColor: Colors.white,
+                        inactiveTrackColor: Colors.grey.shade300,
                       ),
                     ],
                   ),
@@ -377,46 +610,68 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             const SizedBox(height: 24),
 
             // 6. Payment Method
-            _buildSectionTitle("Payment Method"),
-            const SizedBox(height: 12),
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey.shade200),
+                border: Border.all(color: const Color(0xFFEEEEEE)),
                 borderRadius: BorderRadius.circular(16),
               ),
-              child: Row(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: primaryGreen,
-                    ),
-                    child: const Icon(
-                      Icons.account_balance_wallet,
-                      size: 20,
-                      color: Colors.white,
-                    ),
-                  ),
-                  const SizedBox(width: 12),
                   const Text(
-                    "My Wallet",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                  ),
-                  const Spacer(),
-                  const Text(
-                    "\$948.50",
+                    "Payment Method",
                     style: TextStyle(
-                      color: Colors.grey,
-                      fontWeight: FontWeight.w500,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
                     ),
                   ),
-                  const SizedBox(width: 8),
-                  const Icon(
-                    Icons.arrow_forward_ios,
-                    size: 16,
-                    color: Colors.grey,
+                  const SizedBox(height: 16),
+                  const Divider(height: 1, color: Color(0xFFEEEEEE)),
+                  const SizedBox(height: 16),
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(color: const Color(0xFFEEEEEE)),
+                        ),
+                        child: const Icon(
+                          Icons.credit_card,
+                          size: 20,
+                          color: Colors.black,
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            "Choose Payment",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            "Choose your payment method",
+                            style: TextStyle(
+                              color: Colors.grey.shade600,
+                              fontSize: 13,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const Spacer(),
+                      const Icon(
+                        Icons.arrow_forward_ios,
+                        size: 16,
+                        color: Colors.grey,
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -424,19 +679,42 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             const SizedBox(height: 24),
 
             // 7. Payment Details Summary
-            _buildSectionTitle("Payment Details"),
-            const SizedBox(height: 16),
-            _buildPriceRow("Grand Subtotal", "\$6.00"),
-            _buildPriceRow("Service Fee", "\$1.00"),
-            _buildPriceRow("Delivery Fee", "\$1.00"),
-            _buildPriceRow("Discount", "-\$1.80"),
-            if (usePoints)
-              _buildPriceRow("200 Points Used", "-\$2.00"), // Example logic
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 16),
-              child: Divider(),
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                border: Border.all(color: const Color(0xFFEEEEEE)),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "Payment Details",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  const Divider(height: 1, color: Color(0xFFEEEEEE)),
+                  const SizedBox(height: 16),
+                  _buildPriceRow("Grand Subtotal", "\$6.00"),
+                  _buildPriceRow("Service Fee", "\$1.00"),
+                  _buildPriceRow(
+                    "Delivery Fee",
+                    "\$1.00",
+                  ), // Only if delivery? logic handled by state but layout is fixed
+                  _buildPriceRow("Discount", "-\$1.80"),
+                  if (usePoints) _buildPriceRow("200 Points Used", "-\$2.00"),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 16),
+                    child: Divider(color: Color(0xFFEEEEEE)),
+                  ),
+                  _buildPriceRow("Total Payment", "\$7.00", isTotal: true),
+                ],
+              ),
             ),
-            _buildPriceRow("Total Payment", "\$4.20", isTotal: true),
             const SizedBox(height: 32),
 
             // 8. Place Order Button
@@ -501,7 +779,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.grey.shade200),
+        border: Border.all(color: Color(0xFFEEEEEE)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -576,11 +854,50 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey.shade200),
+        border: Border.all(color: Color(0xFFEEEEEE)),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
         children: [
+          // Header Row
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                "Order Details",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              ),
+              OutlinedButton.icon(
+                onPressed: () {},
+                icon: Icon(Icons.add, size: 16, color: primaryGreen),
+                label: Text(
+                  "Add more",
+                  style: TextStyle(
+                    color: primaryGreen,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                style: OutlinedButton.styleFrom(
+                  side: BorderSide(color: primaryGreen),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 4,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          const Divider(height: 1, color: Color(0xFFEEEEEE)),
+          const SizedBox(height: 16),
+          // Product Details
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -594,7 +911,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 child: const Icon(Icons.coffee, color: Colors.brown, size: 30),
                 // Likely replace with Image.asset or network image
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: 16),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -616,41 +933,76 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 4),
+                    const SizedBox(height: 8),
                     const Text(
                       "Hot",
                       style: TextStyle(
                         color: Colors.black,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w600,
                       ),
+                    ),
+                    const SizedBox(height: 12),
+                    const Divider(height: 1, color: Color(0xFFEEEEEE)),
+                    const SizedBox(height: 12),
+                    _buildDetailRow("Base Price", "\$3.50", isBold: true),
+                    _buildDetailRow("Size (Grande)", "+ \$0.50"),
+                    _buildDetailRow("1 x Skim Milk", "+ \$0.50"),
+                    _buildDetailRow("1 x Hazelnut", "+ \$1.00"),
+                    _buildDetailRow("1 x Crumble", "+ \$0.50"),
+                    const SizedBox(height: 12),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: const [
+                        Text(
+                          "Subtotal",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
+                        Text(
+                          "\$6.00",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 16),
-          _buildDetailRow("Base Price", "\$3.50", isBold: true),
-          _buildDetailRow("Size (Grande)", "+ \$0.50"),
-          _buildDetailRow("1 x Skim Milk", "+ \$0.50"),
-          _buildDetailRow("1 x Hazelnut", "+ \$1.00"),
-          _buildDetailRow("1 x Crumble", "+ \$0.50"),
+          const SizedBox(height: 12),
           const Padding(
             padding: EdgeInsets.symmetric(vertical: 12),
-            child: Divider(height: 1),
+            child: Divider(height: 1, color: Color(0xFFEEEEEE)),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
-              Text(
-                "Subtotal",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-              ),
-              Text(
-                "\$6.00",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-              ),
-            ],
+          SizedBox(
+            width: double.infinity,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  "Notes",
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500, // Medium
+                  ),
+                ),
+                const SizedBox(height: 6),
+                const Text(
+                  "Less sugar please.",
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600, // SemiBold
+                    fontSize: 15,
+                    color: Colors.black,
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),
@@ -706,6 +1058,281 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               fontWeight: FontWeight.bold,
             ),
           ),
+        ],
+      ),
+    );
+  }
+
+  void _showPickUpTimeBottomSheet() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => PickUpTimeBottomSheet(
+        initialOption: _pickUpOption,
+        onConfirm: (option, time) {
+          setState(() {
+            _pickUpOption = option;
+            if (time != null) {
+              _selectedTime = time;
+            }
+          });
+        },
+      ),
+    );
+  }
+}
+
+class PickUpTimeBottomSheet extends StatefulWidget {
+  final String initialOption;
+  final Function(String, TimeOfDay?) onConfirm;
+
+  const PickUpTimeBottomSheet({
+    super.key,
+    required this.initialOption,
+    required this.onConfirm,
+  });
+
+  @override
+  State<PickUpTimeBottomSheet> createState() => _PickUpTimeBottomSheetState();
+}
+
+class _PickUpTimeBottomSheetState extends State<PickUpTimeBottomSheet> {
+  late String _selectedOption;
+  bool _showTimePicker = false;
+  late DateTime _tempSelectedDate;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedOption = widget.initialOption;
+    _tempSelectedDate = DateTime.now();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    const Color primaryGreen = Color(0xFF00B14F);
+
+    return Container(
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 40,
+            height: 4,
+            decoration: BoxDecoration(
+              color: Colors.grey.shade300,
+              borderRadius: BorderRadius.circular(2),
+            ),
+          ),
+          const SizedBox(height: 24),
+
+          if (!_showTimePicker) ...[
+            const Text(
+              "Choose pick up time",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 24),
+
+            // Pick up now option
+            GestureDetector(
+              onTap: () => setState(() => _selectedOption = "Pick up now"),
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: _selectedOption == "Pick up now"
+                        ? primaryGreen
+                        : Colors.grey.shade300,
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.black12),
+                      ),
+                      child: const Icon(Icons.check_circle_outline, size: 20),
+                    ),
+                    const SizedBox(width: 16),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          "Pick up now",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
+                        Text(
+                          "Estimated ready in 15 mins",
+                          style: TextStyle(
+                            color: Colors.grey.shade600,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 12),
+
+            // Pick up later option
+            GestureDetector(
+              onTap: () {
+                setState(() {
+                  _selectedOption = "Pick up later";
+                  _showTimePicker = true;
+                });
+              },
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: _selectedOption == "Pick up later"
+                        ? primaryGreen
+                        : Colors.grey.shade300,
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.black12),
+                      ),
+                      child: const Icon(Icons.access_time, size: 20),
+                    ),
+                    const SizedBox(width: 16),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          "Pick up later",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
+                        Text(
+                          "Set your pick up time",
+                          style: TextStyle(
+                            color: Colors.grey.shade600,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const Spacer(),
+                    const Icon(Icons.chevron_right, color: Colors.grey),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 24),
+
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () {
+                  widget.onConfirm(_selectedOption, null);
+                  Navigator.pop(context);
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: primaryGreen,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                ),
+                child: const Text(
+                  "Confirm",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+            ),
+          ] else ...[
+            // Date Picker View
+            const Text(
+              "Set your pick up time",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+            ),
+            const SizedBox(height: 16),
+            const Divider(height: 1, color: Color(0xFFEEEEEE)),
+            const SizedBox(height: 24),
+            Text(
+              DateFormat("'Today', MMM dd yyyy").format(DateTime.now()),
+              style: const TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 16,
+                color: Colors.black,
+              ),
+            ),
+            const SizedBox(height: 24),
+
+            CustomTimePicker(
+              initialTime: TimeOfDay.fromDateTime(_tempSelectedDate),
+              onTimeChanged: (newTime) {
+                final now = DateTime.now();
+                setState(() {
+                  _tempSelectedDate = DateTime(
+                    now.year,
+                    now.month,
+                    now.day,
+                    newTime.hour,
+                    newTime.minute,
+                  );
+                });
+              },
+            ),
+
+            const SizedBox(height: 32),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () {
+                  widget.onConfirm(
+                    "Pick up later",
+                    TimeOfDay.fromDateTime(_tempSelectedDate),
+                  );
+                  Navigator.pop(context);
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: primaryGreen,
+                  padding: const EdgeInsets.symmetric(vertical: 18),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  elevation: 0,
+                ),
+                child: const Text(
+                  "Set Time",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+            ),
+          ],
         ],
       ),
     );

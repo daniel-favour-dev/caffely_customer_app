@@ -140,44 +140,53 @@ class _CoffeeDetailScreenState extends State<CoffeeDetailScreen> {
                         ],
                       ),
                       // Quantity Selector
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 4,
-                        ),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey.shade300),
-                          borderRadius: BorderRadius.circular(24),
-                        ),
-                        child: Row(
-                          children: [
-                            IconButton(
+                      // Quantity Selector
+                      Row(
+                        children: [
+                          Container(
+                            width: 32,
+                            height: 32,
+                            decoration: BoxDecoration(
+                              border: Border.all(color: primaryGreen),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: IconButton(
+                              iconSize: 18,
+                              padding: EdgeInsets.zero,
                               onPressed: () {
                                 if (_quantity > 1) {
                                   setState(() => _quantity--);
                                 }
                               },
                               icon: const Icon(Icons.remove),
-                              constraints: const BoxConstraints(),
+                              color: primaryGreen,
+                            ),
+                          ),
+                          const SizedBox(width: 16),
+                          Text(
+                            "$_quantity",
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(width: 16),
+                          Container(
+                            width: 32,
+                            height: 32,
+                            decoration: BoxDecoration(
+                              border: Border.all(color: primaryGreen),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: IconButton(
+                              iconSize: 18,
                               padding: EdgeInsets.zero,
-                            ),
-                            const SizedBox(width: 12),
-                            Text(
-                              "$_quantity",
-                              style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const SizedBox(width: 12),
-                            IconButton(
                               onPressed: () => setState(() => _quantity++),
                               icon: const Icon(Icons.add),
-                              constraints: const BoxConstraints(),
-                              padding: EdgeInsets.zero,
+                              color: primaryGreen,
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
@@ -214,17 +223,17 @@ class _CoffeeDetailScreenState extends State<CoffeeDetailScreen> {
                               ),
                             ),
                             alignment: Alignment.center,
-                            child: Row(
+                            child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Icon(
                                   temp['icon'],
                                   color: isSelected
                                       ? primaryGreen
-                                      : Colors.grey,
-                                  size: 20,
+                                      : Colors.black,
+                                  size: 28,
                                 ),
-                                const SizedBox(width: 8),
+                                const SizedBox(height: 8),
                                 Text(
                                   temp['label'],
                                   style: TextStyle(
@@ -312,27 +321,27 @@ class _CoffeeDetailScreenState extends State<CoffeeDetailScreen> {
                   const Divider(),
 
                   // Customizations List
-                  _buildCustomizationSection(
-                    "Milk (Optional)",
-                    _milkOptions,
-                    _selectedMilk,
-                    (val) {
+                  CustomizationSection(
+                    title: "Milk (Optional)",
+                    options: _milkOptions,
+                    selectedValue: _selectedMilk,
+                    onSelect: (val) {
                       setState(() => _selectedMilk = val);
                     },
                   ),
-                  _buildCustomizationSection(
-                    "Syrup (Optional)",
-                    _syrupOptions,
-                    _selectedSyrup,
-                    (val) {
+                  CustomizationSection(
+                    title: "Syrup (Optional)",
+                    options: _syrupOptions,
+                    selectedValue: _selectedSyrup,
+                    onSelect: (val) {
                       setState(() => _selectedSyrup = val);
                     },
                   ),
-                  _buildCustomizationSection(
-                    "Topping (Optional)",
-                    _toppingOptions,
-                    _selectedTopping,
-                    (val) {
+                  CustomizationSection(
+                    title: "Topping (Optional)",
+                    options: _toppingOptions,
+                    selectedValue: _selectedTopping,
+                    onSelect: (val) {
                       setState(() => _selectedTopping = val);
                     },
                   ),
@@ -428,71 +437,110 @@ class _CoffeeDetailScreenState extends State<CoffeeDetailScreen> {
       ),
     );
   }
+}
 
-  Widget _buildCustomizationSection(
-    String title,
-    List<Map<String, String>> options,
-    String? selectedValue,
-    Function(String?) onSelect,
-  ) {
-    const Color primaryGreen = Color(0xFF00B14F);
+class CustomizationSection extends StatefulWidget {
+  final String title;
+  final List<Map<String, String>> options;
+  final String? selectedValue;
+  final Function(String?) onSelect;
+
+  const CustomizationSection({
+    super.key,
+    required this.title,
+    required this.options,
+    required this.selectedValue,
+    required this.onSelect,
+  });
+
+  @override
+  State<CustomizationSection> createState() => _CustomizationSectionState();
+}
+
+class _CustomizationSectionState extends State<CustomizationSection> {
+  bool _isExpanded = true;
+  final Color primaryGreen = const Color(0xFF00B14F);
+
+  @override
+  Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              title,
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            Text(
-              "Max 1",
-              style: TextStyle(
-                color: primaryGreen,
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
+        GestureDetector(
+          onTap: () => setState(() => _isExpanded = !_isExpanded),
+          behavior: HitTestBehavior.opaque,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                widget.title,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 12),
-        ...options.map((option) {
-          final isSelected = selectedValue == option['name'];
-          return GestureDetector(
-            onTap: () => onSelect(isSelected ? null : option['name']),
-            child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 12),
-              decoration: const BoxDecoration(
-                border: Border(bottom: BorderSide(color: Colors.transparent)),
-              ),
-              child: Row(
+              Row(
                 children: [
-                  Expanded(
-                    child: Text(
-                      option['name']!,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                      ),
+                  Text(
+                    "Max 1",
+                    style: TextStyle(
+                      color: primaryGreen,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
-                  Text(
-                    option['price']!,
-                    style: const TextStyle(color: Colors.grey, fontSize: 14),
-                  ),
-                  const SizedBox(width: 12),
+                  const SizedBox(width: 4),
                   Icon(
-                    isSelected
-                        ? Icons.radio_button_checked
-                        : Icons.radio_button_unchecked,
-                    color: isSelected ? primaryGreen : Colors.grey.shade400,
+                    _isExpanded
+                        ? Icons.keyboard_arrow_up
+                        : Icons.keyboard_arrow_down,
+                    color: primaryGreen,
+                    size: 20,
                   ),
                 ],
               ),
-            ),
-          );
-        }),
+            ],
+          ),
+        ),
+        if (_isExpanded) ...[
+          const SizedBox(height: 12),
+          ...widget.options.map((option) {
+            final isSelected = widget.selectedValue == option['name'];
+            return GestureDetector(
+              onTap: () => widget.onSelect(isSelected ? null : option['name']),
+              child: Container(
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                decoration: const BoxDecoration(
+                  border: Border(bottom: BorderSide(color: Colors.transparent)),
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        option['name']!,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                    Text(
+                      option['price']!,
+                      style: const TextStyle(color: Colors.grey, fontSize: 14),
+                    ),
+                    const SizedBox(width: 12),
+                    Icon(
+                      isSelected
+                          ? Icons.radio_button_checked
+                          : Icons.radio_button_unchecked,
+                      color: isSelected ? primaryGreen : Colors.grey.shade400,
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }),
+        ],
         const SizedBox(height: 24),
       ],
     );
