@@ -31,12 +31,8 @@ class OrderDetailScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // 1. Status Section
-            _buildStatusSection(),
-            const SizedBox(height: 24),
-
-            // 2. Address/Location Section
-            _buildLocationSection(),
+            // 1. Order Info Section (Status & Location combined)
+            _buildOrderInfoSection(),
             const SizedBox(height: 24),
 
             // 3. Order Items Section
@@ -65,7 +61,7 @@ class OrderDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildStatusSection() {
+  Widget _buildOrderInfoSection() {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -80,114 +76,189 @@ class OrderDetailScreen extends StatelessWidget {
           ),
         ],
       ),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(color: const Color(0xFFEEEEEE)),
-            ),
-            child: const Icon(
-              Icons.access_time, // Or generic clock icon
-              size: 24,
-              color: Colors.black,
-            ),
-          ),
-          const SizedBox(width: 16),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                isDelivery ? "Arriving at 12:30 PM" : "Pick up at 12:00 PM",
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                "Today, Dec 22 2023",
-                style: TextStyle(color: Colors.grey.shade600, fontSize: 13),
-              ),
-            ],
-          ),
-        ],
-      ),
+      child: isDelivery ? _buildDeliveryInfo() : _buildPickupInfo(),
     );
   }
 
-  Widget _buildLocationSection() {
+  Widget _buildDeliveryInfo() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          isDelivery ? "Deliver to:" : "Take your order at:",
+        const Text(
+          "Your order is delivered from:",
           style: TextStyle(
-            color: Colors.grey.shade600,
+            color: Colors.grey,
             fontSize: 14,
             fontWeight: FontWeight.w500,
           ),
         ),
         const SizedBox(height: 12),
-        Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            border: Border.all(color: const Color(0xFFEEEEEE)),
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.02),
-                blurRadius: 10,
-                offset: const Offset(0, 4),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(color: const Color(0xFFEEEEEE)),
               ),
-            ],
+              child: const Icon(
+                Icons.storefront_outlined,
+                size: 24,
+                color: Colors.black,
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "Caffely Astoria Aromas",
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    "350 5th Ave, New York, NY 10118, USA",
+                    style: TextStyle(color: Colors.grey.shade600, fontSize: 13),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        const Padding(
+          padding: EdgeInsets.symmetric(vertical: 16),
+          child: Divider(color: Color(0xFFEEEEEE)),
+        ),
+        const Text(
+          "To your address:",
+          style: TextStyle(
+            color: Colors.grey,
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
           ),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(color: const Color(0xFFEEEEEE)),
-                ),
-                child: Icon(
-                  isDelivery
-                      ? Icons.location_on_outlined
-                      : Icons.storefront_outlined,
-                  size: 24,
-                  color: Colors.black,
-                ),
+        ),
+        const SizedBox(height: 12),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(color: const Color(0xFFEEEEEE)),
               ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      isDelivery ? "Home Address" : "Caffely Astoria Aromas",
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      isDelivery
-                          ? "123 Elm Street, Apt 4B, New York, NY"
-                          : "350 5th Ave, New York, NY 10118, USA",
-                      style: TextStyle(
-                        color: Colors.grey.shade600,
-                        fontSize: 13,
-                      ),
-                    ),
-                  ],
-                ),
+              child: const Icon(
+                Icons.location_on_outlined,
+                size: 24,
+                color: Colors.black,
               ),
-            ],
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "Home",
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    "701 7th Ave, New York, NY 10036, USA",
+                    style: TextStyle(color: Colors.grey.shade600, fontSize: 13),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildPickupInfo() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(color: const Color(0xFFEEEEEE)),
+              ),
+              child: const Icon(
+                Icons.access_time,
+                size: 24,
+                color: Colors.black,
+              ),
+            ),
+            const SizedBox(width: 16),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  "Pick up at 12:00 PM",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  "Today, Dec 22 2023",
+                  style: TextStyle(color: Colors.grey.shade600, fontSize: 13),
+                ),
+              ],
+            ),
+          ],
+        ),
+        const Padding(
+          padding: EdgeInsets.symmetric(vertical: 16),
+          child: Divider(color: Color(0xFFEEEEEE)),
+        ),
+        const Text(
+          "Take your order at:",
+          style: TextStyle(
+            color: Colors.grey,
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
           ),
+        ),
+        const SizedBox(height: 12),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(color: const Color(0xFFEEEEEE)),
+              ),
+              child: const Icon(
+                Icons.storefront_outlined,
+                size: 24,
+                color: Colors.black,
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "Caffely Astoria Aromas",
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    "350 5th Ave, New York, NY 10118, USA",
+                    style: TextStyle(color: Colors.grey.shade600, fontSize: 13),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
       ],
     );

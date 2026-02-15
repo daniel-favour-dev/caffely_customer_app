@@ -5,6 +5,8 @@ import '../widgets/custom_time_picker.dart';
 import 'delivery_tracking_screen.dart';
 import 'voucher_selection_screen.dart';
 import 'payment_method_selection_screen.dart';
+import 'delivery_address_selection_screen.dart';
+import 'delivery_service_selection_screen.dart';
 
 class CheckoutScreen extends StatefulWidget {
   const CheckoutScreen({super.key});
@@ -240,43 +242,57 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         ),
                         const SizedBox(width: 16),
                         Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                "Home",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const DeliveryAddressSelectionScreen(),
                                 ),
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                "701 7th Ave, New York, NY 10036, USA",
-                                style: TextStyle(
-                                  color: Colors.grey.shade600,
-                                  fontSize: 13,
-                                ),
-                              ),
-                              const SizedBox(height: 8),
-                              Row(
+                              );
+                            },
+                            child: Container(
+                              color: Colors.transparent, // Ensures tap target
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Icon(
-                                    Icons.access_time,
-                                    size: 16,
-                                    color: Colors.grey.shade500,
-                                  ),
-                                  const SizedBox(width: 4),
-                                  Text(
-                                    "5 minutes estimate arrived",
+                                  const Text(
+                                    "Home Address",
                                     style: TextStyle(
-                                      color: Colors.grey.shade500,
-                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
                                     ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    "123 Elm Street, Apt 4B, New York, NY",
+                                    style: TextStyle(
+                                      color: Colors.grey.shade600,
+                                      fontSize: 13,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Row(
+                                    children: [
+                                      Icon(
+                                        Icons.edit_outlined,
+                                        size: 16,
+                                        color: Colors.grey.shade500,
+                                      ),
+                                      const SizedBox(width: 4),
+                                      Text(
+                                        "Edit Address",
+                                        style: TextStyle(
+                                          color: Colors.grey.shade500,
+                                          fontSize: 12,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ],
                               ),
-                            ],
+                            ),
                           ),
                         ),
                         const Icon(
@@ -446,42 +462,53 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             if (isDelivery) ...[
               _buildSectionTitle("Delivery"),
               const SizedBox(height: 12),
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey.shade200),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Row(
-                  children: [
-                    Container(
-                      width: 40,
-                      height: 40,
-                      decoration: const BoxDecoration(
-                        color: Colors
-                            .orange, // Placeholder for DoorDash logo color
-                        shape: BoxShape.circle,
-                      ),
-                      child: const Icon(
-                        Icons.delivery_dining,
-                        color: Colors.white,
-                      ),
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          const DeliveryServiceSelectionScreen(),
                     ),
-                    const SizedBox(width: 12),
-                    const Text(
-                      "DoorDash Drive",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
+                  );
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey.shade200),
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 40,
+                        height: 40,
+                        decoration: const BoxDecoration(
+                          color: Colors
+                              .orange, // Placeholder for DoorDash logo color
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          Icons.delivery_dining,
+                          color: Colors.white,
+                        ),
                       ),
-                    ),
-                    const Spacer(),
-                    const Icon(
-                      Icons.arrow_forward_ios,
-                      size: 16,
-                      color: Colors.grey,
-                    ),
-                  ],
+                      const SizedBox(width: 12),
+                      const Text(
+                        "DoorDash Drive",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
+                      const Spacer(),
+                      const Icon(
+                        Icons.arrow_forward_ios,
+                        size: 16,
+                        color: Colors.grey,
+                      ),
+                    ],
+                  ),
                 ),
               ),
               const SizedBox(height: 24),
