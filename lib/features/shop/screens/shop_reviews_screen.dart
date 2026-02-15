@@ -48,6 +48,7 @@ class _ShopReviewsScreenState extends State<ShopReviewsScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        scrolledUnderElevation: 0,
         backgroundColor: Colors.white,
         elevation: 0,
         title: const Text(
@@ -61,13 +62,16 @@ class _ShopReviewsScreenState extends State<ShopReviewsScreen> {
         ),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(24),
         child: Column(
           children: [
-            // Rating Summary
+            // Rating Summary Section
             Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                // Average Rating
                 Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     const Text(
                       "4.8",
@@ -75,16 +79,25 @@ class _ShopReviewsScreenState extends State<ShopReviewsScreen> {
                         fontSize: 48,
                         fontWeight: FontWeight.bold,
                         color: Colors.black,
+                        height: 1.0,
                       ),
                     ),
-                    const SizedBox(height: 4),
+                    const SizedBox(height: 8),
                     Row(
                       children: List.generate(5, (index) {
-                        return const Icon(
-                          Icons.star,
-                          color: Colors.amber,
-                          size: 20,
-                        );
+                        if (index < 4) {
+                          return const Icon(
+                            Icons.star_rounded,
+                            color: Colors.orange,
+                            size: 20,
+                          );
+                        } else {
+                          return const Icon(
+                            Icons.star_half_rounded,
+                            color: Colors.orange,
+                            size: 20,
+                          );
+                        }
                       }),
                     ),
                     const SizedBox(height: 8),
@@ -93,25 +106,36 @@ class _ShopReviewsScreenState extends State<ShopReviewsScreen> {
                       style: TextStyle(
                         color: Colors.grey.shade600,
                         fontSize: 14,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                   ],
                 ),
                 const SizedBox(width: 24),
-                // Progress Bars
+                // Vertical Divider
+                Container(width: 1, height: 100, color: Colors.grey.shade200),
+                const SizedBox(width: 24),
+                // Rating Bars
                 Expanded(
                   child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      _buildRatingBar(5, 0.9),
-                      _buildRatingBar(4, 0.7),
-                      _buildRatingBar(3, 0.1),
-                      _buildRatingBar(2, 0.1),
+                      _buildRatingBar(5, 0.85),
+                      const SizedBox(height: 6),
+                      _buildRatingBar(4, 0.65),
+                      const SizedBox(height: 6),
+                      _buildRatingBar(3, 0.15),
+                      const SizedBox(height: 6),
+                      _buildRatingBar(2, 0.20),
+                      const SizedBox(height: 6),
                       _buildRatingBar(1, 0.05),
                     ],
                   ),
                 ),
               ],
             ),
+            const SizedBox(height: 24),
+            const Divider(color: Color(0xFFEEEEEE)),
             const SizedBox(height: 24),
             // Filter Chips
             SizedBox(
@@ -123,45 +147,56 @@ class _ShopReviewsScreenState extends State<ShopReviewsScreen> {
                 itemBuilder: (context, index) {
                   final isSelected = _selectedFilterIndex == index;
                   final label = _filters[index];
-                  // If it's a number, append a star icon
                   final isStarFilter = int.tryParse(label) != null;
+                  final isSort = index == 0;
 
-                  return ChoiceChip(
-                    label: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        if (index == 0)
-                          const Icon(Icons.sort, size: 16, color: Colors.black),
-                        if (index == 0) const SizedBox(width: 4),
-                        if (isStarFilter)
-                          const Icon(Icons.star, size: 16, color: Colors.amber),
-                        if (isStarFilter) const SizedBox(width: 4),
-                        Text(
-                          label,
-                          style: TextStyle(
-                            color: isSelected ? Colors.white : Colors.black,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
-                    ),
-                    selected: isSelected,
-                    onSelected: (selected) {
+                  return GestureDetector(
+                    onTap: () {
                       setState(() {
                         _selectedFilterIndex = index;
                       });
                     },
-                    selectedColor: primaryGreen,
-                    backgroundColor: Colors.white,
-                    shape: StadiumBorder(
-                      side: BorderSide(
-                        color: isSelected ? primaryGreen : Colors.grey.shade300,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 10,
                       ),
-                    ),
-                    showCheckmark: false,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 8,
+                      decoration: BoxDecoration(
+                        color: isSelected ? primaryGreen : Colors.white,
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(
+                          color: isSelected
+                              ? primaryGreen
+                              : Colors.grey.shade300,
+                          width: 1.5,
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          if (isSort)
+                            Icon(
+                              Icons.swap_vert,
+                              size: 18,
+                              color: isSelected ? Colors.white : primaryGreen,
+                            ),
+                          if (isStarFilter)
+                            Icon(
+                              Icons.star_border_rounded,
+                              size: 18,
+                              color: isSelected ? Colors.white : primaryGreen,
+                            ),
+                          if (isSort || isStarFilter) const SizedBox(width: 6),
+                          Text(
+                            label,
+                            style: TextStyle(
+                              color: isSelected ? Colors.white : primaryGreen,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   );
                 },
@@ -183,48 +218,66 @@ class _ShopReviewsScreenState extends State<ShopReviewsScreen> {
                       children: [
                         const CircleAvatar(
                           radius: 20,
+                          backgroundColor: Colors.grey,
+                          // Placeholder user image
                           backgroundImage: AssetImage(
                             'assets/images/user1.png',
-                          ), // Placeholder
-                          backgroundColor: Colors.grey,
+                          ),
                         ),
                         const SizedBox(width: 12),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              review['name'],
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                review['name'],
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                ),
                               ),
-                            ),
-                            const SizedBox(height: 2),
-                            Text(
-                              review['date'],
-                              style: TextStyle(
-                                color: Colors.grey.shade500,
-                                fontSize: 12,
+                              const SizedBox(height: 4),
+                              Text(
+                                review['date'],
+                                style: TextStyle(
+                                  color: Colors.grey.shade500,
+                                  fontSize: 12,
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                        const Spacer(),
-                        Row(
-                          children: [
-                            for (int i = 0; i < 5; i++)
-                              Icon(
-                                i < (review['rating'] as double).ceil()
-                                    ? Icons.star
-                                    : Icons.star_border,
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 6,
+                          ),
+                          decoration: BoxDecoration(
+                            // color: Colors.white,
+                            border: Border.all(color: Colors.grey.shade300),
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: Row(
+                            children: [
+                              const Icon(
+                                Icons.star_rounded,
+                                color: Colors.orange,
                                 size: 16,
-                                color: Colors.amber,
                               ),
-                          ],
+                              const SizedBox(width: 4),
+                              Text(
+                                "${review['rating']}",
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                        const SizedBox(width: 8),
+                        const SizedBox(width: 12),
                         const Icon(
-                          Icons.more_vert,
+                          Icons.more_horiz,
                           color: Colors.grey,
                           size: 20,
                         ),
@@ -234,8 +287,9 @@ class _ShopReviewsScreenState extends State<ShopReviewsScreen> {
                     Text(
                       review['review'],
                       style: TextStyle(
-                        color: Colors.grey.shade800,
+                        color: Colors.grey.shade700,
                         height: 1.5,
+                        fontSize: 14,
                       ),
                     ),
                   ],
@@ -249,31 +303,40 @@ class _ShopReviewsScreenState extends State<ShopReviewsScreen> {
   }
 
   Widget _buildRatingBar(int stars, double value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2.0),
-      child: Row(
-        children: [
-          SizedBox(
-            width: 12,
-            child: Text(
-              "$stars",
-              style: const TextStyle(fontWeight: FontWeight.bold),
+    return Row(
+      children: [
+        SizedBox(
+          width: 12,
+          child: Text(
+            "$stars",
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 12,
+              color: Colors.black,
             ),
           ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: ClipRRect(
+        ),
+        const SizedBox(width: 8),
+        Expanded(
+          child: Container(
+            height: 8,
+            decoration: BoxDecoration(
+              color: Colors.grey.shade200,
               borderRadius: BorderRadius.circular(4),
-              child: LinearProgressIndicator(
-                value: value,
-                backgroundColor: Colors.grey.shade200,
-                color: const Color(0xFF00B14F),
-                minHeight: 8,
+            ),
+            alignment: Alignment.centerLeft,
+            child: FractionallySizedBox(
+              widthFactor: value,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: const Color(0xFF00B14F),
+                  borderRadius: BorderRadius.circular(4),
+                ),
               ),
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

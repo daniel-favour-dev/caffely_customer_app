@@ -22,7 +22,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
   // Pick Up State
   String _pickUpOption = "Pick up now";
-  DateTime _selectedDate = DateTime.now();
+
   TimeOfDay _selectedTime = TimeOfDay.now();
 
   String get _formattedPickUpTime {
@@ -38,10 +38,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       _selectedTime.minute,
     );
     return "Pick up at ${DateFormat('h:mm a').format(dt)}";
-  }
-
-  String get _formattedPickUpDate {
-    return "Today, ${DateFormat('MMM dd yyyy').format(DateTime.now())}";
   }
 
   @override
@@ -823,89 +819,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         fontSize: 18,
         fontWeight: FontWeight.bold,
         color: Colors.black,
-      ),
-    );
-  }
-
-  Widget _buildLocationCard({
-    required IconData icon,
-    required String title,
-    required String subtitle,
-    String? extraInfo,
-    bool showEdit = false,
-  }) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Color(0xFFEEEEEE)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade100,
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(icon, color: Colors.black, size: 20),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          title,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                        ),
-                        if (showEdit)
-                          const Icon(
-                            Icons.arrow_forward_ios,
-                            size: 16,
-                            color: Colors.grey,
-                          ),
-                      ],
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      subtitle,
-                      style: TextStyle(
-                        color: Colors.grey.shade600,
-                        fontSize: 13,
-                        height: 1.4,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          if (extraInfo != null) ...[
-            const SizedBox(height: 12),
-            Row(
-              children: [
-                Icon(Icons.access_time, size: 16, color: Colors.grey.shade500),
-                const SizedBox(width: 6),
-                Text(
-                  extraInfo,
-                  style: TextStyle(color: Colors.grey.shade500, fontSize: 12),
-                ),
-              ],
-            ),
-          ],
-        ],
       ),
     );
   }
