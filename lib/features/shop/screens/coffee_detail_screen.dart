@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../../../../common/widgets/share_bottom_sheet.dart';
+import '../../orders/screens/checkout_screen.dart';
 
 class CoffeeDetailScreen extends StatefulWidget {
   final String productName;
@@ -20,11 +22,15 @@ class _CoffeeDetailScreenState extends State<CoffeeDetailScreen> {
   String _selectedSize = "Medium";
 
   // Options
-  final List<String> _tempOptions = ["Hot", "Iced"];
+  final List<Map<String, dynamic>> _tempOptions = [
+    {"label": "Hot", "icon": Icons.coffee},
+    {"label": "Iced", "icon": Icons.local_drink},
+  ];
+
   final List<Map<String, dynamic>> _sizeOptions = [
-    {"label": "Small", "price": "Free", "icon": Icons.coffee},
-    {"label": "Medium", "price": "+ 0.50", "icon": Icons.coffee},
-    {"label": "Large", "price": "+ 1.00", "icon": Icons.coffee},
+    {"label": "Tall", "price": "Free", "icon": Icons.local_cafe},
+    {"label": "Grande", "price": "+ 0.50", "icon": Icons.local_cafe},
+    {"label": "Venti", "price": "+ 1.00", "icon": Icons.local_cafe},
   ];
 
   // Customization Options
@@ -74,7 +80,14 @@ class _CoffeeDetailScreenState extends State<CoffeeDetailScreen> {
           ),
           IconButton(
             icon: const Icon(Icons.share_outlined, color: Colors.black),
-            onPressed: () {},
+            onPressed: () {
+              showModalBottomSheet(
+                context: context,
+                backgroundColor: Colors.transparent,
+                isScrollControlled: true,
+                builder: (context) => const ShareBottomSheet(),
+              );
+            },
           ),
         ],
       ),
@@ -180,10 +193,11 @@ class _CoffeeDetailScreenState extends State<CoffeeDetailScreen> {
                   const SizedBox(height: 12),
                   Row(
                     children: _tempOptions.map((temp) {
-                      final isSelected = _selectedTemp == temp;
+                      final isSelected = _selectedTemp == temp['label'];
                       return Expanded(
                         child: GestureDetector(
-                          onTap: () => setState(() => _selectedTemp = temp),
+                          onTap: () =>
+                              setState(() => _selectedTemp = temp['label']),
                           child: Container(
                             margin: const EdgeInsets.only(right: 12),
                             padding: const EdgeInsets.symmetric(vertical: 12),
@@ -204,9 +218,7 @@ class _CoffeeDetailScreenState extends State<CoffeeDetailScreen> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Icon(
-                                  temp == "Hot"
-                                      ? Icons.local_fire_department
-                                      : Icons.ac_unit,
+                                  temp['icon'],
                                   color: isSelected
                                       ? primaryGreen
                                       : Colors.grey,
@@ -214,7 +226,7 @@ class _CoffeeDetailScreenState extends State<CoffeeDetailScreen> {
                                 ),
                                 const SizedBox(width: 8),
                                 Text(
-                                  temp,
+                                  temp['label'],
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     color: isSelected
@@ -384,7 +396,14 @@ class _CoffeeDetailScreenState extends State<CoffeeDetailScreen> {
                 SizedBox(
                   width: 200,
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const CheckoutScreen(),
+                        ),
+                      );
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: primaryGreen,
                       shape: RoundedRectangleBorder(
