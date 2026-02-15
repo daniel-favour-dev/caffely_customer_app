@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../widgets/custom_time_picker.dart';
 import 'delivery_tracking_screen.dart';
+import 'voucher_selection_screen.dart';
+import 'payment_method_selection_screen.dart';
 
 class CheckoutScreen extends StatefulWidget {
   const CheckoutScreen({super.key});
@@ -508,48 +510,63 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   const SizedBox(height: 16),
 
                   // Use Vouchers
-                  Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(color: const Color(0xFFEEEEEE)),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const VoucherSelectionScreen(),
                         ),
-                        child: const Icon(
-                          Icons.confirmation_number_outlined,
-                          size: 20,
-                          color: Colors.black,
-                        ),
-                      ),
-                      const SizedBox(width: 16),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      );
+                    },
+                    child: Container(
+                      color: Colors.transparent, // Ensures tap target
+                      child: Row(
                         children: [
-                          const Text(
-                            "Use Vouchers",
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
+                          Container(
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: const Color(0xFFEEEEEE),
+                              ),
+                            ),
+                            child: const Icon(
+                              Icons.confirmation_number_outlined,
+                              size: 20,
+                              color: Colors.black,
                             ),
                           ),
-                          const SizedBox(height: 4),
-                          Text(
-                            "Save orders with promos",
-                            style: TextStyle(
-                              color: Colors.grey.shade600,
-                              fontSize: 13,
-                            ),
+                          const SizedBox(width: 16),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                "Use Vouchers",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                "Save orders with promos",
+                                style: TextStyle(
+                                  color: Colors.grey.shade600,
+                                  fontSize: 13,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const Spacer(),
+                          const Icon(
+                            Icons.arrow_forward_ios,
+                            size: 16,
+                            color: Colors.grey,
                           ),
                         ],
                       ),
-                      const Spacer(),
-                      const Icon(
-                        Icons.arrow_forward_ios,
-                        size: 16,
-                        color: Colors.grey,
-                      ),
-                    ],
+                    ),
                   ),
 
                   const Padding(
@@ -630,48 +647,64 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   const SizedBox(height: 16),
                   const Divider(height: 1, color: Color(0xFFEEEEEE)),
                   const SizedBox(height: 16),
-                  Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(color: const Color(0xFFEEEEEE)),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              const PaymentMethodSelectionScreen(),
                         ),
-                        child: const Icon(
-                          Icons.credit_card,
-                          size: 20,
-                          color: Colors.black,
-                        ),
-                      ),
-                      const SizedBox(width: 16),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      );
+                    },
+                    child: Container(
+                      color: Colors.transparent, // Ensures tap target
+                      child: Row(
                         children: [
-                          const Text(
-                            "Choose Payment",
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
+                          Container(
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: const Color(0xFFEEEEEE),
+                              ),
+                            ),
+                            child: const Icon(
+                              Icons.credit_card,
+                              size: 20,
+                              color: Colors.black,
                             ),
                           ),
-                          const SizedBox(height: 4),
-                          Text(
-                            "Choose your payment method",
-                            style: TextStyle(
-                              color: Colors.grey.shade600,
-                              fontSize: 13,
-                            ),
+                          const SizedBox(width: 16),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                "Choose Payment",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                "Choose your payment method",
+                                style: TextStyle(
+                                  color: Colors.grey.shade600,
+                                  fontSize: 13,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const Spacer(),
+                          const Icon(
+                            Icons.arrow_forward_ios,
+                            size: 16,
+                            color: Colors.grey,
                           ),
                         ],
                       ),
-                      const Spacer(),
-                      const Icon(
-                        Icons.arrow_forward_ios,
-                        size: 16,
-                        color: Colors.grey,
-                      ),
-                    ],
+                    ),
                   ),
                 ],
               ),
